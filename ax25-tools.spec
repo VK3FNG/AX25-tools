@@ -1,0 +1,173 @@
+Name:           ax25-tools
+Version:        0.0.10rc4
+Release:        1
+Summary:        Non-GUI tools used to configure an AX.25 enabled computer
+
+Group:          Applications/Communications
+License:        GPLv2+
+URL:            http://www.linux-ax25.org/
+Source0:        http://www.linux-ax25.org/pub/%{name}/%{name}-0.0.10-rc4.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-0.0.10-rc4-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	libax25-devel
+BuildRequires:	libXext-devel, libX11-devel, libXi-devel, fltk-devel
+BuildRequires:	mesa-libGLU-devel
+
+%description
+ax25-tools is a collection of tools that are used to configure an ax.25 enabled
+computer. They will configure interfaces and assign callsigns to ports as well
+as Net/ROM and ROSE configuration.  This package only contains the command
+line programs; the GUI programs are contained in ax25-tools-x package.
+
+ * m6pack - handle multiple 6pack TNCs on a single interface
+ * ax25d - general purpose AX.25, NET/ROM and Rose daemon
+ * axctl - configure/Kill running AX.25 connections
+ * axparms - configure AX.25 interfaces
+ * axspawn - allow automatic login to a Linux system
+ * beacon - transmit periodic messages on an AX.25 port
+ * bpqparms - configure BPQ ethernet devices
+ * mheardd - display AX.25 calls recently heard
+ * rxecho - transparently route AX.25 packets between ports
+ * mheard - collect information about packet activity
+ * dmascc_cfg - configure dmascc devices
+ * sethdlc - get/set Linux HDLC packet radio modem driver port information
+ * smmixer - get/set Linux soundcard packet radio modem driver mixer
+ * kissattach - Attach a KISS or 6PACK interface
+ * kissnetd - create a virtual network
+ * kissparms - configure KISS TNCs
+ * mkiss - attach multiple KISS interfaces
+ * net2kiss - convert a network AX.25 driver to a KISS stream on a pty
+ * netromd - send and receive NET/ROM routing messages
+ * nodesave - saves NET/ROM routing information
+ * nrattach - start a NET/ROM interface
+ * nrparms - configure a NET/ROM interface
+ * nrsdrv - KISS to NET/ROM serial converter
+ * rsattach - start a ROSE interface
+ * rsdwnlnk - user exit from the ROSE network
+ * rsmemsiz - monitor the ROSE subsystem
+ * rsusers.sh - monitor AX.25, NET/ROM and ROSE users
+ * rsparms - configure a ROSE interface
+ * rsuplnk - User entry into the ROSE network
+ * rip98d - RIP98 routing daemon
+ * ttylinkd - TTYlink daemon for AX.25, NET/ROM, ROSE and IP
+ * ax25_call - Make an AX.25 connection
+ * netrom_call - Make a NET/ROM connection
+ * rose_call - Make a ROSE connection
+ * tcp_call - Make a TCP connection
+ * yamcfg - configure a YAM interface
+
+%package docs
+Summary:	Documentation for ax25-tools and ax25-tools-x
+Group:		Documentation
+
+%description docs
+This package contains the documentation for ax25-tools and ax25-tools-x.
+
+%package x
+
+Summary:	Tools used to configure an AX.25 enabled computer
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description x
+ax25-tools is a collection of tools that are used to configure an ax.25 enabled
+computer.  This package contains the GUI programs to configure Baycom modem
+and sound modem.
+
+ * smdiag - Linux soundcard packet radio modem driver diagnostics utility
+ * xfhdlcchpar - kernel HDLC radio modem driver channel parameter utility
+ * xfhdlcst - kernel HDLC radio modem driver status display utility
+ * xfsmdiag - kernel soundcard radio modem driver diagnostics utility
+ * xfsmmixer - kernel soundcard radio modem driver mixer utility
+
+%prep
+%setup -q -n %{name}-0.0.10-rc4
+
+%build
+%configure
+make %{?_smp_mflags}
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING README
+%{_bindir}/axgetput
+%{_bindir}/bget
+%{_bindir}/bput
+%{_bindir}/mheard
+%{_bindir}/sethdlc
+%{_bindir}/smmixer
+%{_sbindir}/ax25_call
+%{_sbindir}/ax25d
+%{_sbindir}/axctl
+%{_sbindir}/axparms
+%{_sbindir}/axspawn
+%{_sbindir}/beacon
+%{_sbindir}/bpqparms
+%{_sbindir}/dmascc_cfg
+%{_sbindir}/kissattach
+%{_sbindir}/kissnetd
+%{_sbindir}/kissparms
+%{_sbindir}/m6pack
+%{_sbindir}/mcs2h
+%{_sbindir}/mheardd
+%{_sbindir}/mkiss
+%{_sbindir}/net2kiss
+%{_sbindir}/netrom_call
+%{_sbindir}/netromd
+%{_sbindir}/nodesave
+%{_sbindir}/nrattach
+%{_sbindir}/nrparms
+%{_sbindir}/nrsdrv
+%{_sbindir}/rip98d
+%{_sbindir}/rose_call
+%{_sbindir}/rsattach
+%{_sbindir}/rsdwnlnk
+%{_sbindir}/rsmemsiz
+%{_sbindir}/rsparms
+%{_sbindir}/rsuplnk
+%{_sbindir}/rsusers.sh
+%{_sbindir}/rxecho
+%{_sbindir}/spattach
+%{_sbindir}/tcp_call
+%{_sbindir}/ttylinkd
+%{_sbindir}/yamcfg
+
+%files docs
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING
+%doc yamdrv/README.yamdrv user_call/README.user_call tcpip/ttylinkd.README dmascc/README.dmascc
+%{_mandir}/man?/*
+%{_docdir}/*
+
+%files x
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING
+%{_bindir}/smdiag
+%{_sbindir}/xfhdlcchpar
+%{_sbindir}/xfhdlcst
+%{_sbindir}/xfsmdiag
+%{_sbindir}/xfsmmixer
+
+%changelog
+* Tue Jun 4 2013 Ralf Baechle <ralf@linux-mips.org>
+- Move doc files to separate docs package.
+- Reset Release to 1.
+
+* Sat Jun 25 2011 Ralf Baechle <ralf@linux-mips.org>
+- Add BuildRequires to libax25-devel, libXext-devel and libX11-devel.
+- Move smdiag, xfhdlcchpar, xfhdlcst, xfsmdiag and xfsmmixer into a separate
+  package.
+- Bump Release to 4.
+
+* Fri Jun 24 2011 Ralf Baechle <ralf@linux-mips.org>
+- Add BuildRequires to libXi-devel and fltk-devel
+- Bump Release to 2.
+
+* Sat Jun 27 2009 Ralf Baechle <ralf@linux-mips.org>
+- Initial version
